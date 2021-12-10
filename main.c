@@ -18,33 +18,29 @@ const char
 	return (str);
 }
 
-int
-	init(t_list *list, int argc, char **argv)
+t_node
+	*init(t_list *list, int argc, char **argv)
 {
 	int		i;
-	int		tmp;
-	t_node	*node;
+	t_node	*nodes;
 
 	i = 0;
 	list->frst = NULL;
 	list->last = NULL;
+	nodes = malloc(sizeof(*nodes) * argc);
+	if (nodes == NULL)
+		return (NULL);
 	while (i < argc)
 	{
-		node = malloc(sizeof(*node));
-		if (node != NULL)
+		l_add_last(list, &nodes[i]);
+		if (*ft_atoi(argv[i], &nodes[i].value))
 		{
-			l_add_last(list, node);
-			tmp = *ft_atoi(argv[i], &node->value);
-		}
-		if (node == NULL || tmp)
-		{
-			while (list->frst != NULL)
-				free(l_pop_frst(list));
-			return (0);
+			free(nodes);
+			return (NULL);
 		}
 		i += 1;
 	}
-	return (1);
+	return (nodes);
 }
 
 void
@@ -65,14 +61,14 @@ void
 int
 	main(int argc, char **argv)
 {
-	t_stack	stack;
+	t_ctx	ctx;
 
-	init(&stack.a, argc - 1, argv + 1);
-	stack.b.frst = NULL;
-	stack.b.last = NULL;
-	dump(stack.a, "a");
-	dump(stack.b, "b");
-	op_exec(&stack, "ra");
-	dump(stack.a, "a");
-	dump(stack.b, "b");
+	init(&ctx.stacks[0], argc - 1, argv + 1);
+	ctx.stacks[1].frst = NULL;
+	ctx.stacks[1].last = NULL;
+	dump(ctx.stacks[0], "a");
+	dump(ctx.stacks[1], "b");
+	sort(&ctx, argc - 1, 0, 1);
+	dump(ctx.stacks[0], "a");
+	dump(ctx.stacks[1], "b");
 }

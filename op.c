@@ -1,102 +1,77 @@
 #include "push_swap.h"
 
-int
-	op_swap(t_stack *stack, const char *op)
+void
+	c_swap(t_ctx *ctx, int op)
 {
-	t_list	*l1;
 	t_node	*n1;
 	t_node	*n2;
 
-	if (op[1] == 's')
-		return (op_swap(stack, "sa") && op_swap(stack, "sb"));
-	else if (op[1] == 'a')
-		l1 = &stack->a;
-	else if (op[1] == 'b')
-		l1 = &stack->b;
-	else
-		return (0);
-	n1 = l_pop_frst(l1);
-	n2 = l_pop_frst(l1);
-	l_add_frst(l1, n1);
-	l_add_frst(l1, n2);
-	return (1);
-}
-
-int
-	op_push(t_stack *stack, const char *op)
-{
-	t_list	*l1;
-	t_list	*l2;
-	t_node	*n1;
-
-	if (op[1] == 'a')
+	if (op == 2)
 	{
-		l1 = &stack->a;
-		l2 = &stack->b;
-	}
-	else if (op[1] == 'b')
-	{
-		l1 = &stack->b;
-		l2 = &stack->a;
+		c_swap(ctx, 0);
+		c_swap(ctx, 1);
 	}
 	else
 	{
-		return (0);
+		n1 = l_pop_frst(&ctx->stacks[op]);
+		n2 = l_pop_frst(&ctx->stacks[op]);
+		l_add_frst(&ctx->stacks[op], n1);
+		l_add_frst(&ctx->stacks[op], n2);
 	}
-	n1 = l_pop_frst(l2);
-	l_add_frst(l1, n1);
-	return (1);
 }
 
-int
-	op_shup(t_stack *stack, const char *op)
+void
+	c_push(t_ctx *ctx, int op)
 {
-	t_list	*l1;
 	t_node	*n1;
 
-	if (op[1] == 'r')
-		return (op_shup(stack, "ra") && op_shup(stack, "rb"));
-	else if (op[1] == 'a')
-		l1 = &stack->a;
-	else if (op[1] == 'b')
-		l1 = &stack->b;
-	else
-		return (0);
-	n1 = l_pop_frst(l1);
-	l_add_last(l1, n1);
-	return (1);
+	n1 = l_pop_frst(&ctx->stacks[1 - op]);
+	l_add_frst(&ctx->stacks[op], n1);
 }
 
-int
-	op_shdo(t_stack *stack, const char *op)
+void
+	c_shup(t_ctx *ctx, int op)
 {
-	t_list	*l1;
 	t_node	*n1;
 
-	if (op[2] == 'r')
-		return (op_shdo(stack, "rra") && op_shdo(stack, "rrb"));
-	else if (op[2] == 'a')
-		l1 = &stack->a;
-	else if (op[2] == 'b')
-		l1 = &stack->b;
+	if (op == 2)
+	{
+		c_shup(ctx, 0);
+		c_shup(ctx, 1);
+	}
 	else
-		return (0);
-	n1 = l_pop_last(l1);
-	l_add_frst(l1, n1);
-	return (1);
+	{
+		n1 = l_pop_frst(&ctx->stacks[op]);
+		l_add_last(&ctx->stacks[op], n1);
+	}
 }
 
-int
-	op_exec(t_stack *stack, const char *op)
+void
+	c_shdo(t_ctx *ctx, int op)
 {
-	if (op[0] == 's' && !op[2])
-		return (op_swap(stack, op));
-	else if (op[0] == 'p' && !op[2])
-		return (op_push(stack, op));
-	else if (op[0] == 'r' && !op[2])
-		return (op_shup(stack, op));
-	else if (op[0] == 'r' && op[1] == 'r' && !op[3])
-		return (op_shdo(stack, op));
+	t_node	*n1;
+
+	if (op == 2)
+	{
+		c_shdo(ctx, 0);
+		c_shdo(ctx, 1);
+	}
 	else
-		return (0);
+	{
+		n1 = l_pop_last(&ctx->stacks[op]);
+		l_add_frst(&ctx->stacks[op], n1);
+	}
+}
+
+void
+	c_exec(t_ctx *ctx, int op)
+{
+	if (op >> 2 == 0)
+		c_swap(ctx, op & 3);
+	if (op >> 2 == 1)
+		c_push(ctx, op & 3);
+	if (op >> 2 == 2)
+		c_shup(ctx, op & 3);
+	if (op >> 2 == 3)
+		c_shdo(ctx, op & 3);
 }
