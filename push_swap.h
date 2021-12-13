@@ -42,8 +42,8 @@ void	o_shup(t_list *ctx, int op);
 void	o_shdo(t_list *ctx, int op);
 void	o_exec(t_list *ctx, int op);
 
-void	u_exec(t_list *ctx, int op);
-void	u_rotate(t_list *ctx, int a, int b);
+void	u_exec(t_list *ctx, int w, int op);
+void	u_rotate(t_list *ctx, int w, int a, int b);
 int		u_cost(int a, int b);
 void	u_min(int *a1, int a2, int *b1, int b2);
 void	u_optimize(int *ra, int sa, int *rb, int sb);
