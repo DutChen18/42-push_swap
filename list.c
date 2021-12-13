@@ -12,6 +12,7 @@ void
 	else
 		list->last = node;
 	list->frst = node;
+	list->size += 1;
 }
 
 void
@@ -26,6 +27,7 @@ void
 	else
 		list->frst = node;
 	list->last = node;
+	list->size += 1;
 }
 
 t_node
@@ -41,6 +43,7 @@ t_node
 		node->next->prev = NULL;
 	else
 		list->last = NULL;
+	list->size -= 1;
 	return (node);
 }
 
@@ -57,5 +60,6 @@ t_node
 		node->prev->next = NULL;
 	else
 		list->frst = NULL;
+	list->size -= 1;
 	return (node);
 }

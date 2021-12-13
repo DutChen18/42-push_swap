@@ -1,5 +1,4 @@
 #include "push_swap.h"
-#include <stdlib.h>
 #include <stdio.h>
 
 const char
@@ -18,57 +17,55 @@ const char
 	return (str);
 }
 
-t_node
-	*init(t_list *list, int argc, char **argv)
+int
+	init(char **argv, t_list *list, int (fn)(t_list *))
 {
-	int		i;
-	t_node	*nodes;
+	t_node	node;
 
-	i = 0;
-	list->frst = NULL;
-	list->last = NULL;
-	nodes = malloc(sizeof(*nodes) * argc);
-	if (nodes == NULL)
-		return (NULL);
-	while (i < argc)
-	{
-		l_add_last(list, &nodes[i]);
-		if (*ft_atoi(argv[i], &nodes[i].value))
-		{
-			free(nodes);
-			return (NULL);
-		}
-		i += 1;
-	}
-	return (nodes);
+	if (*argv == NULL)
+		return (fn(list));
+	if (*ft_atoi(*argv, &node.value))
+		return (-1);
+	l_add_last(list, &node);
+	return (init(argv + 1, list, fn));
 }
 
 void
-	dump(t_list list, const char *name)
+	dump(t_list *list)
 {
 	t_node	*node;
 
-	node = list.last;
-	printf("%s>", name);
+	node = list->frst;
 	while (node != NULL)
 	{
 		printf(" %d", node->value);
-		node = node->prev;
+		node = node->next;
 	}
 	printf("\n");
 }
 
 int
+	run(t_list *list)
+{
+	t_list	ctx[2];
+
+	ctx[0] = *list;
+	ctx[1].frst = NULL;
+	ctx[1].last = NULL;
+	ctx[1].size = 0;
+	s_sort(ctx, ctx[0].size);
+	dump(&ctx[0]);
+	return (0);
+}
+
+int
 	main(int argc, char **argv)
 {
-	t_ctx	ctx;
+	t_list	list;
 
-	init(&ctx.stacks[0], argc - 1, argv + 1);
-	ctx.stacks[1].frst = NULL;
-	ctx.stacks[1].last = NULL;
-	dump(ctx.stacks[0], "a");
-	dump(ctx.stacks[1], "b");
-	sort(&ctx, argc - 1, 0, 1);
-	dump(ctx.stacks[0], "a");
-	dump(ctx.stacks[1], "b");
+	(void) argc;
+	list.frst = NULL;
+	list.last = NULL;
+	list.size = 0;
+	init(argv + 1, &list, run);
 }

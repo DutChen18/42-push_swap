@@ -1,119 +1,110 @@
 #include "push_swap.h"
-#include <unistd.h>
+#include <limits.h>
 
-static const char	*g_ops[] = {
-	"sa",
-	"sb",
-	"ss",
-	NULL,
-	"pa",
-	"pb",
-	NULL,
-	NULL,
-	"ra",
-	"rb",
-	"rr",
-	NULL,
-	"rra",
-	"rrb",
-	"rrr",
-	NULL
-};
-
-static void
-	exec(t_ctx *ctx, int op)
+static int
+	dist(t_list *ctx, int value)
 {
-	char	buf[5];
-	size_t	size;
+	int		i;
+	t_node	*node;
 
-	size = 0;
-	while (g_ops[op][size])
+	i = 0;
+	node = ctx[0].frst;
+	while (1)
 	{
-		buf[size] = g_ops[op][size];
-		size += 1;
+		i += 1;
+		if (node->next == NULL)
+			break ;
+		if ((node->value < value) && (value < node->next->value))
+			break ;
+		if ((value < node->next->value) && (node->next->value < node->value))
+			break ;
+		if ((value > node->value) && (node->value > node->next->value))
+			break ;
+		node = node->next;
 	}
-	buf[size] = '\n';
-	size += 1;
-	write(1, buf, size);
-	c_exec(ctx, op);
+	return (i);
 }
 
-static void
-	split(t_ctx *ctx, size_t size, int op)
+static int
+	m(t_list *ctx, int *i, int d)
 {
-	while (size > 0)
-	{
-		exec(ctx, op_pb ^ op);
-		size -= 1;
-	}
-}
-
-static void
-	merge(t_ctx *ctx, size_t size, int op, int sign)
-{
-	size_t	left;
-	size_t	right;
+	t_node	*node;
+	int		best;
+	int		j;
+	int		rot[2];
 	int		tmp;
 
-	left = (size + 1) / 2;
-	right = size / 2;
-	while (left > 0)
+	if (d == 0 || ctx[1].size == 0)
+		return (0);
+	best = INT_MAX;
+	node = ctx[1].frst->next;
+	j = 0;
+	while (node != NULL)
 	{
-		exec(ctx, op_ra ^ op);
-		left -= 1;
-	}
-	left = (size + 1) / 2;
-	while (left > 0 || right > 0)
-	{
-		if (left == 0)
-			tmp = 1;
-		else if (right == 0)
-			tmp = 0;
-		else if ((ctx->stacks[op].last->value > ctx->stacks[1 - op].frst->value) == sign)
-			tmp = 0;
-		else if ((ctx->stacks[op].last->value < ctx->stacks[1 - op].frst->value) == sign)
-			tmp = 1;
-		if (tmp)
+		rot[0] = dist(ctx, node->value);
+		rot[1] = j;
+		u_optimize(&rot[0], ctx[0].size, &rot[1], ctx[1].size);
+		u_rotate(ctx, rot[0], rot[1]);
+		u_exec(ctx, op_pa);
+		tmp = u_cost(rot[0], rot[1]) + m(ctx, NULL, d - 1);
+		u_exec(ctx, op_pb);
+		u_rotate(ctx, -rot[0], -rot[1]);
+		if (tmp < best)
 		{
-			exec(ctx, op_pa ^ op);
-			right -= 1;
+			best = tmp;
+			if (i != NULL)
+				*i = j;
 		}
-		else
-		{
-			exec(ctx, op_rra ^ op);
-			left -= 1;
-		}
+		j += 1;
+		node = node->next;
 	}
+	return (best);
 }
 
 static void
-	sort2(t_ctx *ctx, size_t size, int op, int sign)
+	step(t_list *ctx)
 {
-	if ((ctx->stacks[op].frst->value > ctx->stacks[op].frst->next->value) == sign)
-		exec(ctx, op_sa ^ op);
-	if (size == 3 && (ctx->stacks[op].frst->next->value > ctx->stacks[op].frst->next->next->value) == sign)
+	t_node	*node;
+	int		i;
+	int		rot[2];
+	int		bst[2];
+
+	node = ctx[1].frst->next;
+	bst[0] = dist(ctx, ctx[1].frst->value);
+	bst[1] = 0;
+	u_optimize(&bst[0], ctx[0].size, &bst[1], ctx[1].size);
+	i = 0;
+	while (node != NULL)
 	{
-		exec(ctx, op_ra ^ op);
-		if ((ctx->stacks[op].frst->value > ctx->stacks[op].frst->next->value) == sign)
-			exec(ctx, op_sa ^ op);
-		exec(ctx, op_rra ^ op);
-		if ((ctx->stacks[op].frst->value > ctx->stacks[op].frst->next->value) == sign)
-			exec(ctx, op_sa ^ op);
+		i += 1;
+		rot[0] = dist(ctx, node->value);
+		rot[1] = i;
+		u_optimize(&rot[0], ctx[0].size, &rot[1], ctx[1].size);
+		u_min(&bst[0], rot[0], &bst[1], rot[1]);
+		node = node->next;
 	}
+	u_rotate(ctx, bst[0], bst[1]);
+	u_exec(ctx, op_pa);
 }
 
 void
-	sort(t_ctx *ctx, size_t size, int op, int sign)
+	s_sort(t_list *ctx, int size)
 {
-	if (size > 3)
+	int		i;
+	t_node	*node;
+
+	while (ctx[0].size > 2)
+		u_exec(ctx, op_pb);
+	while (ctx[1].size > 0)
+		step(ctx);
+	node = ctx[0].frst;
+	i = 0;
+	while (node != NULL)
 	{
-		split(ctx, size / 2, op);
-		sort(ctx, (size + 1) / 2, op, sign);
-		sort(ctx, size / 2, op ^ 1, 1 - sign);
-		merge(ctx, size, op, sign);
+		i += 1;
+		if (node->next == NULL || node->next->value < node->value)
+			break ;
+		node = node->next;
 	}
-	else if (size > 1)
-	{
-		sort2(ctx, size, op, sign);
-	}
+	u_rotate(ctx, (i > size / 2) * (i - size) + (i <= size / 2) * i, 0);
 }

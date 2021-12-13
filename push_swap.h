@@ -4,7 +4,6 @@
 
 typedef struct s_node	t_node;
 typedef struct s_list	t_list;
-typedef struct s_ctx	t_ctx;
 
 struct s_node {
 	t_node	*next;
@@ -15,10 +14,7 @@ struct s_node {
 struct s_list {
 	t_node	*frst;
 	t_node	*last;
-};
-
-struct s_ctx {
-	t_list	stacks[2];
+	size_t	size;
 };
 
 enum {
@@ -40,12 +36,18 @@ void	l_add_last(t_list *list, t_node *node);
 t_node	*l_pop_frst(t_list *list);
 t_node	*l_pop_last(t_list *list);
 
-void	c_swap(t_ctx *ctx, int op);
-void	c_push(t_ctx *ctx, int op);
-void	c_shup(t_ctx *ctx, int op);
-void	c_shdo(t_ctx *ctx, int op);
-void	c_exec(t_ctx *ctx, int op);
+void	o_swap(t_list *ctx, int op);
+void	o_push(t_list *ctx, int op);
+void	o_shup(t_list *ctx, int op);
+void	o_shdo(t_list *ctx, int op);
+void	o_exec(t_list *ctx, int op);
 
-void	sort(t_ctx *ctx, size_t size, int op, int sign);
+void	u_exec(t_list *ctx, int op);
+void	u_rotate(t_list *ctx, int a, int b);
+int		u_cost(int a, int b);
+void	u_min(int *a1, int a2, int *b1, int b2);
+void	u_optimize(int *ra, int sa, int *rb, int sb);
+
+void	s_sort(t_list *ctx, int size);
 
 #endif
