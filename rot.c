@@ -1,7 +1,7 @@
 #include "push_swap.h"
 
 int
-	s_cost(int a, int b)
+	r_cost(int a, int b)
 {
 	if (a < 0 && b < 0)
 		return (-u_min(a, b));
@@ -11,9 +11,9 @@ int
 }
 
 void
-	s_min(int *a1, int a2, int *b1, int b2)
+	r_min(int *a1, int a2, int *b1, int b2)
 {
-	if (s_cost(a2, b2) < s_cost(*a1, *b1))
+	if (r_cost(a2, b2) < r_cost(*a1, *b1))
 	{
 		*a1 = a2;
 		*b1 = b2;
@@ -21,20 +21,20 @@ void
 }
 
 void
-	s_optimize(int *ra, int sa, int *rb, int sb)
+	r_optimize(int *ra, int sa, int *rb, int sb)
 {
 	int	ta;
 	int	tb;
 
 	ta = *ra;
 	tb = *rb;
-	s_min(ra, ta - sa, rb, tb);
-	s_min(ra, ta, rb, tb - sb);
-	s_min(ra, ta - sa, rb, tb - sb);
+	r_min(ra, ta - sa, rb, tb);
+	r_min(ra, ta, rb, tb - sb);
+	r_min(ra, ta - sa, rb, tb - sb);
 }
 
 void
-	s_rot(t_list *ctx, int o1, int o2, int count)
+	r_rot(t_list *ctx, int o1, int o2, int count)
 {
 	while (count > 0)
 	{
@@ -49,7 +49,7 @@ void
 }
 
 void
-	s_rotate(t_list *ctx, int a, int b)
+	r_rotate(t_list *ctx, int a, int b)
 {
 	int	i;
 
@@ -58,7 +58,7 @@ void
 		i = u_min(a, b);
 	if (a > 0 && b > 0)
 		i = u_max(a, b);
-	s_rot(ctx, op_rr, op_rrr, i);
-	s_rot(ctx, op_ra, op_rra, a - i);
-	s_rot(ctx, op_rb, op_rrb, b - i);
+	r_rot(ctx, op_rr, op_rrr, i);
+	r_rot(ctx, op_ra, op_rra, a - i);
+	r_rot(ctx, op_rb, op_rrb, b - i);
 }

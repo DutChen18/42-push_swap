@@ -1,0 +1,5 @@
+*.o
+/checker_Mac
+/checker_Linux
+/checker
+/push_swap

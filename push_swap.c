@@ -39,12 +39,12 @@ static void
 	{
 		rot[0] = dist(ctx, node->value);
 		rot[1] = i;
-		s_optimize(&rot[0], ctx[0].size, &rot[1], ctx[1].size);
-		s_min(&bst[0], rot[0], &bst[1], rot[1]);
+		r_optimize(&rot[0], ctx[0].size, &rot[1], ctx[1].size);
+		r_min(&bst[0], rot[0], &bst[1], rot[1]);
 		node = node->next;
 		i += 1;
 	}
-	s_rotate(ctx, bst[0], bst[1]);
+	r_rotate(ctx, bst[0], bst[1]);
 	i_exec(ctx, op_pa);
 }
 
@@ -67,6 +67,6 @@ int
 			break ;
 		node = node->next;
 	}
-	s_rotate(ctx, u_min(i, ctx[0].size - i), 0);
+	r_rotate(ctx, u_min(i, ctx[0].size - i), 0);
 	return (0);
 }

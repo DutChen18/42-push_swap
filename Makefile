@@ -1,4 +1,4 @@
-SRC=main.c list.c op.c util.c instr.c stack.c
+SRC=main.c list.c op.c util.c instr.c rot.c
 SRC_PUSH_SWAP=push_swap.c
 SRC_CHECKER=checker.c
 INC=push_swap.h

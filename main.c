@@ -2,11 +2,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static char
-	*m_atoi(char *str, int *value)
+static int
+	m_atoi(char *str, int *value)
 {
 	int	sign;
 
+	if (!*str)
+		return (-1);
 	sign = 1 - (*str == '-') * 2;
 	str += *str == '-';
 	*value = 0;
@@ -15,7 +17,9 @@ static char
 		*value = *value * 10 + (*str - '0') * sign;
 		str += 1;
 	}
-	return (str);
+	if (*str)
+		return (-1);
+	return (0);
 }
 
 static int
@@ -26,7 +30,7 @@ static int
 
 	if (*argv == NULL)
 		return (fn(list));
-	if (*m_atoi(*argv, &node.value))
+	if (m_atoi(*argv, &node.value) < 0)
 		return (-1);
 	ptr = list->frst;
 	while (ptr != NULL)

@@ -46,11 +46,11 @@ int		u_max(int a, int b);
 int		u_min(int a, int b);
 int		u_abs(int a);
 
-int		s_cost(int a, int b);
-void	s_min(int *a1, int a2, int *b1, int b2);
-void	s_optimize(int *r, int sa, int *rb, int sb);
-void	s_rot(t_list *ctx, int o1, int o2, int count);
-void	s_rotate(t_list *ctx, int a, int b);
+int		r_cost(int a, int b);
+void	r_min(int *a1, int a2, int *b1, int b2);
+void	r_optimize(int *r, int sa, int *rb, int sb);
+void	r_rot(t_list *ctx, int o1, int o2, int count);
+void	r_rotate(t_list *ctx, int a, int b);
 
 int		i_parse(const char *buf);
 int		i_read(int *op);
