@@ -1,5 +1,4 @@
 #include "push_swap.h"
-#include <limits.h>
 
 static int
 	dist(t_list *ctx, int value)
