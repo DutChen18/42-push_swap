@@ -11,11 +11,11 @@ static int
 	node = ctx[0].frst;
 	while (node->next != NULL)
 	{
-		if ((node->value < value) && (value < node->next->value))
+		if (node->value < value && value < node->next->value)
 			break ;
-		if ((value < node->next->value) && (node->next->value < node->value))
+		if (value < node->next->value && node->next->value < node->value)
 			break ;
-		if ((value > node->value) && (node->value > node->next->value))
+		if (value > node->value && node->value > node->next->value)
 			break ;
 		i += 1;
 		node = node->next;
@@ -31,11 +31,10 @@ static void
 	int		rot[2];
 	int		bst[2];
 
-	bst[0] = dist(ctx, ctx[1].frst->value);
-	bst[1] = 0;
-	r_optimize(&bst[0], ctx[0].size, &bst[1], ctx[1].size);
-	i = 1;
-	node = ctx[1].frst->next;
+	bst[0] = ctx[0].size;
+	bst[1] = ctx[1].size;
+	i = 0;
+	node = ctx[1].frst;
 	while (node != NULL)
 	{
 		rot[0] = dist(ctx, node->value);
