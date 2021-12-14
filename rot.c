@@ -55,9 +55,9 @@ void
 
 	i = 0;
 	if (a < 0 && b < 0)
-		i = u_min(a, b);
-	if (a > 0 && b > 0)
 		i = u_max(a, b);
+	if (a > 0 && b > 0)
+		i = u_min(a, b);
 	r_rot(ctx, op_rr, op_rrr, i);
 	r_rot(ctx, op_ra, op_rra, a - i);
 	r_rot(ctx, op_rb, op_rrb, b - i);
