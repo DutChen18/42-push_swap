@@ -42,12 +42,21 @@ void	o_shup(t_list *ctx, int op);
 void	o_shdo(t_list *ctx, int op);
 void	o_exec(t_list *ctx, int op);
 
-void	u_exec(t_list *ctx, int w, int op);
-void	u_rotate(t_list *ctx, int w, int a, int b);
-int		u_cost(int a, int b);
-void	u_min(int *a1, int a2, int *b1, int b2);
-void	u_optimize(int *ra, int sa, int *rb, int sb);
+int		u_max(int a, int b);
+int		u_min(int a, int b);
+int		u_abs(int a);
 
-void	s_sort(t_list *ctx, int size);
+int		s_cost(int a, int b);
+void	s_min(int *a1, int a2, int *b1, int b2);
+void	s_optimize(int *r, int sa, int *rb, int sb);
+void	s_rot(t_list *ctx, int o1, int o2, int count);
+void	s_rotate(t_list *ctx, int a, int b);
+
+void	i_write(int op);
+void	i_exec(t_list *ctx, int op);
+char	*i_atoi(char *str, int *value);
+int		i_init(char **argv, t_list *list, int (fn)(t_list *));
+
+void	a_sort(t_list *ctx);
 
 #endif
