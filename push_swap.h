@@ -52,11 +52,11 @@ void	s_optimize(int *r, int sa, int *rb, int sb);
 void	s_rot(t_list *ctx, int o1, int o2, int count);
 void	s_rotate(t_list *ctx, int a, int b);
 
+int		i_parse(const char *buf);
+int		i_read(int *op);
 void	i_write(int op);
 void	i_exec(t_list *ctx, int op);
-char	*i_atoi(char *str, int *value);
-int		i_init(char **argv, t_list *list, int (fn)(t_list *));
 
-void	a_sort(t_list *ctx);
+int		ps_main(t_list *ctx);
 
 #endif

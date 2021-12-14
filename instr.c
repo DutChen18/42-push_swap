@@ -21,19 +21,11 @@ static const char	*g_ops[] = {
 };
 
 int
-	i_read(void)
+	i_parse(const char *buf)
 {
-	char	buf[4];
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
-	i = 0;
-	while (i < 4)
-	{
-		if (read(0, buf + i, 1) <= 0)
-			break ;
-		i += 1;
-	}
 	i = 0;
 	while (i < 16)
 	{
@@ -48,6 +40,32 @@ int
 		i += 1;
 	}
 	return (-1);
+}
+
+int
+	i_read(int *op)
+{
+	char	buf[4];
+	int		i;
+	int		j;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = read(0, buf + i, 1);
+		if (j == 0 && i == 0)
+			return (0);
+		if (j <= 0)
+			return (-1);
+		if (buf[i] == '\n')
+			break ;
+		i += 1;
+	}
+	i = i_parse(buf);
+	if (i < 0)
+		return (-1);
+	*op = i;
+	return (1);
 }
 
 void
@@ -69,33 +87,4 @@ void
 {
 	i_write(op);
 	o_exec(ctx, op);
-}
-
-char
-	*i_atoi(char *str, int *value)
-{
-	int	sign;
-
-	sign = 1 - (*str == '-') * 2;
-	str += *str == '-';
-	*value = 0;
-	while (*str >= '0' && *str <= '9')
-	{
-		*value = *value * 10 + (*str - '0') * sign;
-		str += 1;
-	}
-	return (str);
-}
-
-int
-	i_init(char **argv, t_list *list, int (fn)(t_list *))
-{
-	t_node	node;
-
-	if (*argv == NULL)
-		return (fn(list));
-	if (*i_atoi(*argv, &node.value))
-		return (-1);
-	l_add_last(list, &node);
-	return (i_init(argv + 1, list, fn));
 }
