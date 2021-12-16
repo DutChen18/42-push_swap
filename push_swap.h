@@ -59,6 +59,10 @@ int		i_read(int *op);
 void	i_write(int op);
 void	i_exec(t_list *ctx, int op);
 
+int		a_position(t_list *list, int value);
+int		a_select(t_list *list, int n);
+int		a_min_index(t_list *list);
+
 int		ps_main(t_list *ctx);
 
 #endif

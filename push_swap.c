@@ -1,27 +1,4 @@
 #include "push_swap.h"
-#include <limits.h>
-
-static int
-	dist(t_list *ctx, int value)
-{
-	int		i;
-	t_node	*node;
-
-	i = 1;
-	node = ctx[0].frst;
-	while (node->next != NULL)
-	{
-		if (node->value < value && value < node->next->value)
-			break ;
-		if (value < node->next->value && node->next->value < node->value)
-			break ;
-		if (value > node->value && node->value > node->next->value)
-			break ;
-		i += 1;
-		node = node->next;
-	}
-	return (i);
-}
 
 static void
 	step(t_list *ctx)
@@ -38,7 +15,7 @@ static void
 	node = ctx[1].frst;
 	while (node != NULL)
 	{
-		i0 = dist(ctx, node->value);
+		i0 = a_position(&ctx[0], node->value);
 		r_optimize(&i0, ctx[0].size, &i1, ctx[1].size);
 		r_min(&j0, i0, &j1, i1);
 		i1 += 1;
@@ -66,52 +43,40 @@ static void
 	}
 }
 
-static int
-	select(t_list *list, int n)
+static void
+	fast_sort(t_list *ctx)
 {
-	int		i;
 	t_node	*a;
 	t_node	*b;
+	t_node	*c;
 
-	a = list->frst;
-	while (1)
-	{
-		i = 0;
-		b = list->frst;
-		while (b != NULL)
-		{
-			if (b->value < a->value)
-				i += 1;
-			b = b->next;
-		}
-		if (i == n)
-			return (a->value);
-		a = a->next;
-	}
+	a = ctx[0].frst;
+	b = a->next;
+	c = b->next;
+	if (a->value < b->value && b->value < c->value)
+		return ;
+	if (b->value < c->value && c->value < a->value)
+		return ;
+	if (c->value < a->value && a->value < b->value)
+		return ;
+	i_exec(ctx, op_sa);
 }
 
 int
 	ps_main(t_list *ctx)
 {
-	int		i;
-	t_node	*node;
+	int	i;
 
-	while (ctx[0].size > 2)
+	while (ctx[0].size > 3)
 	{
-		i = select(&ctx[0], u_min(124, ctx[0].size - 3));
+		i = a_select(&ctx[0], u_min(124, ctx[0].size - 4));
 		sort_part(ctx, i);
 	}
+	if (ctx[0].size == 3)
+		fast_sort(ctx);
 	while (ctx[1].size > 0)
 		step(ctx);
-	node = ctx[0].frst;
-	i = 0;
-	while (node != NULL)
-	{
-		i += 1;
-		if (node->next == NULL || node->next->value < node->value)
-			break ;
-		node = node->next;
-	}
+	i = a_min_index(&ctx[0]);
 	r_rotate(ctx, u_absmin(i, i - ctx[0].size), 0);
 	return (0);
 }
