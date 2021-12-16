@@ -69,8 +69,16 @@ int
 
 	while (ctx[0].size > 3)
 	{
-		i = a_select(&ctx[0], u_min(124, ctx[0].size - 4));
-		sort_part(ctx, i);
+		if (ctx[0].size > 128)
+		{
+			i = a_select(&ctx[0], u_min(124, ctx[0].size - 4));
+			sort_part(ctx, i);
+		}
+		else
+		{
+			while (ctx[0].size > 3)
+				i_exec(ctx, op_pb);
+		}
 	}
 	if (ctx[0].size == 3)
 		fast_sort(ctx);
