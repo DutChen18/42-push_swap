@@ -26,3 +26,21 @@ int
 	else
 		return (-a);
 }
+
+int
+	u_absmax(int a, int b)
+{
+	if (u_abs(a) > u_abs(b))
+		return (a);
+	else
+		return (b);
+}
+
+int
+	u_absmin(int a, int b)
+{
+	if (u_abs(a) < u_abs(b))
+		return (a);
+	else
+		return (b);
+}

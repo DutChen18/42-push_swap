@@ -25,25 +25,25 @@ static int
 static void
 	step(t_list *ctx)
 {
-	int		i;
+	int		i0;
+	int		i1;
+	int		j0;
+	int		j1;
 	t_node	*node;
-	int		rot[2];
-	int		bst[2];
 
-	bst[0] = ctx[0].size;
-	bst[1] = ctx[1].size;
-	i = 0;
+	j0 = ctx[0].size;
+	j1 = ctx[1].size;
+	i1 = 0;
 	node = ctx[1].frst;
 	while (node != NULL)
 	{
-		rot[0] = dist(ctx, node->value);
-		rot[1] = i;
-		r_optimize(&rot[0], ctx[0].size, &rot[1], ctx[1].size);
-		r_min(&bst[0], rot[0], &bst[1], rot[1]);
-		i += 1;
+		i0 = dist(ctx, node->value);
+		r_optimize(&i0, ctx[0].size, &i1, ctx[1].size);
+		r_min(&j0, i0, &j1, i1);
+		i1 += 1;
 		node = node->next;
 	}
-	r_rotate(ctx, bst[0], bst[1]);
+	r_rotate(ctx, j0, j1);
 	i_exec(ctx, op_pa);
 }
 
@@ -66,9 +66,6 @@ int
 			break ;
 		node = node->next;
 	}
-	if ((size_t) i < ctx[0].size - i)
-		r_rotate(ctx, i, 0);
-	else
-		r_rotate(ctx, i - ctx[0].size, 0);
+	r_rotate(ctx, u_absmin(i, i - ctx[0].size), 0);
 	return (0);
 }

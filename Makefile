@@ -5,7 +5,7 @@ INC=push_swap.h
 OBJ=$(SRC:.c=.o)
 OBJ_PUSH_SWAP=$(SRC_PUSH_SWAP:.c=.o)
 OBJ_CHECKER=$(SRC_CHECKER:.c=.o)
-CFLAGS=-Wall -Wextra -Werror
+CFLAGS=-Wall -Wextra -Werror -O3
 
 all: push_swap checker
 

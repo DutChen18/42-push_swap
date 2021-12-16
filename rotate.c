@@ -11,12 +11,12 @@ int
 }
 
 void
-	r_min(int *a1, int a2, int *b1, int b2)
+	r_min(int *a0, int a1, int *b0, int b1)
 {
-	if (r_cost(a2, b2) < r_cost(*a1, *b1))
+	if (r_cost(a1, b1) < r_cost(*a0, *b0))
 	{
-		*a1 = a2;
-		*b1 = b2;
+		*a0 = a1;
+		*b0 = b1;
 	}
 }
 
@@ -26,24 +26,25 @@ void
 	int	ta;
 	int	tb;
 
-	ta = *ra;
-	tb = *rb;
+	ta = (*ra + sa) % sa;
+	tb = (*rb + sb) % sb;
+	r_min(ra, ta, rb, tb);
 	r_min(ra, ta - sa, rb, tb);
 	r_min(ra, ta, rb, tb - sb);
 	r_min(ra, ta - sa, rb, tb - sb);
 }
 
 void
-	r_rot(t_list *ctx, int o1, int o2, int count)
+	r_rot(t_list *ctx, int o0, int o1, int count)
 {
 	while (count > 0)
 	{
-		i_exec(ctx, o1);
+		i_exec(ctx, o0);
 		count -= 1;
 	}
 	while (count < 0)
 	{
-		i_exec(ctx, o2);
+		i_exec(ctx, o1);
 		count += 1;
 	}
 }

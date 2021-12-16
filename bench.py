@@ -2,24 +2,26 @@
 import asyncio
 import random
 
+async def pexec(*args, **kwargs):
+	async with pexec.sem:
+		proc = await asyncio.create_subprocess_exec(*args,
+			stdout=asyncio.subprocess.PIPE,
+			stdin=asyncio.subprocess.PIPE)
+		stdout, stderr = await proc.communicate(kwargs.get("stdin"))
+		return stdout
+
 async def sort(stack):
-	proc = await asyncio.create_subprocess_exec(
-		"./push_swap", *map(str, stack),
-		stdout=asyncio.subprocess.PIPE)
-	stdout, stderr = await proc.communicate()
+	stdout = await pexec("./push_swap", *map(str, stack))
 	return stdout.decode()[:-1].split('\n')
 
 async def check(stack, solution):
-	proc = await asyncio.create_subprocess_exec(
-		"./checker", *map(str, stack),
-		stdout=asyncio.subprocess.PIPE,
-		stdin=asyncio.subprocess.PIPE)
 	solution = "\n".join(solution).encode() + b"\n"
-	stdout, stderr = await proc.communicate(solution)
+	stdout = await pexec("./checker", *map(str, stack), stdin=solution)
 	return stdout == b"OK\n"
 
 async def main():
-	stacks = [list(range(500)) for _ in range(100)]
+	pexec.sem = asyncio.Semaphore(100)
+	stacks = [list(range(500)) for _ in range(200)]
 	for stack in stacks:
 		random.shuffle(stack)
 	solutions = await asyncio.gather(*map(sort, stacks))
@@ -31,4 +33,5 @@ async def main():
 	print(f"ok: {all(results)}")
 
 if __name__ == "__main__":
+	random.seed(0)
 	asyncio.run(main())

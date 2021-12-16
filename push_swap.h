@@ -45,6 +45,8 @@ void	o_exec(t_list *ctx, int op);
 int		u_max(int a, int b);
 int		u_min(int a, int b);
 int		u_abs(int a);
+int		u_absmax(int a, int b);
+int		u_absmin(int a, int b);
 
 int		r_cost(int a, int b);
 void	r_min(int *a1, int a2, int *b1, int b2);
