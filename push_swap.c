@@ -1,4 +1,5 @@
 #include "push_swap.h"
+#include <limits.h>
 
 static int
 	dist(t_list *ctx, int value)
@@ -47,6 +48,48 @@ static void
 	i_exec(ctx, op_pa);
 }
 
+static void
+	sort_part(t_list *ctx, int max)
+{
+	int	i;
+	int	value;
+
+	i = ctx[0].size;
+	while (i > 0)
+	{
+		value = ctx[0].frst->value;
+		if (value <= max)
+			i_exec(ctx, op_pb);
+		else
+			i_exec(ctx, op_ra);
+		i -= 1;
+	}
+}
+
+static int
+	select(t_list *list, int n)
+{
+	int		i;
+	t_node	*a;
+	t_node	*b;
+
+	a = list->frst;
+	while (1)
+	{
+		i = 0;
+		b = list->frst;
+		while (b != NULL)
+		{
+			if (b->value < a->value)
+				i += 1;
+			b = b->next;
+		}
+		if (i == n)
+			return (a->value);
+		a = a->next;
+	}
+}
+
 int
 	ps_main(t_list *ctx)
 {
@@ -54,7 +97,10 @@ int
 	t_node	*node;
 
 	while (ctx[0].size > 2)
-		i_exec(ctx, op_pb);
+	{
+		i = select(&ctx[0], u_min(124, ctx[0].size - 3));
+		sort_part(ctx, i);
+	}
 	while (ctx[1].size > 0)
 		step(ctx);
 	node = ctx[0].frst;

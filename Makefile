@@ -1,5 +1,5 @@
-SRC=main.c list.c op.c util.c instr.c rotate.c
-SRC_PUSH_SWAP=push_swap.c
+SRC=main.c list.c op.c instr.c
+SRC_PUSH_SWAP=push_swap.c util.c rotate.c
 SRC_CHECKER=checker.c
 INC=push_swap.h
 OBJ=$(SRC:.c=.o)
