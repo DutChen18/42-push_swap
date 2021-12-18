@@ -15,10 +15,13 @@ static void
 	node = ctx[1].frst;
 	while (node != NULL)
 	{
-		i0 = a_position(&ctx[0], node->value);
-		r_optimize(&i0, ctx[0].size, &i1, ctx[1].size);
-		r_min(&j0, i0, &j1, i1);
-		i1 += 1;
+		if (u_min(i1, ctx[1].size - i1) < r_cost(j0, j1))
+		{
+			i0 = a_position(&ctx[0], node->value);
+			r_optimize(&i0, ctx[0].size, &i1, ctx[1].size);
+			r_min(&j0, i0, &j1, i1);
+		}
+		i1 = (i1 + ctx[1].size + 1) % ctx[1].size;
 		node = node->next;
 	}
 	r_rotate(ctx, j0, j1);
@@ -44,7 +47,7 @@ static void
 }
 
 static void
-	fast_sort(t_list *ctx)
+	sort_fast(t_list *ctx)
 {
 	t_node	*a;
 	t_node	*b;
@@ -65,23 +68,17 @@ static void
 int
 	ps_main(t_list *ctx)
 {
-	int	i;
+	int		i;
 
-	while (ctx[0].size > 3)
+	while (ctx[0].size > CHUNK_SIZE + 3)
 	{
-		if (ctx[0].size > 128)
-		{
-			i = a_select(&ctx[0], u_min(124, ctx[0].size - 4));
-			sort_part(ctx, i);
-		}
-		else
-		{
-			while (ctx[0].size > 3)
-				i_exec(ctx, op_pb);
-		}
+		i = a_select(&ctx[0], u_min(CHUNK_SIZE - 1, ctx[0].size - 4));
+		sort_part(ctx, i);
 	}
+	while (ctx[0].size > 3)
+		i_exec(ctx, op_pb);
 	if (ctx[0].size == 3)
-		fast_sort(ctx);
+		sort_fast(ctx);
 	while (ctx[1].size > 0)
 		step(ctx);
 	i = a_min_index(&ctx[0]);

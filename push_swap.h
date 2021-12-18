@@ -2,6 +2,10 @@
 # define PUSH_SWAP_H
 # include <stddef.h>
 
+# ifndef CHUNK_SIZE
+#  define CHUNK_SIZE 150
+# endif
+
 typedef struct s_node	t_node;
 typedef struct s_list	t_list;
 

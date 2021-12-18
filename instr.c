@@ -71,15 +71,18 @@ int
 void
 	i_write(int op)
 {
-	const char	*str;
+	char	buf[4];
+	size_t	size;
 
-	str = g_ops[op];
-	while (*str)
+	size = 0;
+	while (g_ops[op][size])
 	{
-		write(1, str, 1);
-		str += 1;
+		buf[size] = g_ops[op][size];
+		size += 1;
 	}
-	write(1, "\n", 1);
+	buf[size] = '\n';
+	size += 1;
+	write(1, buf, size);
 }
 
 void

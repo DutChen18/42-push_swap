@@ -1,6 +1,18 @@
 #include "push_swap.h"
 #include <limits.h>
 
+static int
+	between(int a, int b, int c)
+{
+	if (a < b && b < c)
+		return (1);
+	if (a < b && a > c)
+		return (1);
+	if (b < c && a > c)
+		return (1);
+	return (0);
+}
+
 int
 	a_position(t_list *list, int value)
 {
@@ -11,11 +23,7 @@ int
 	node = list->frst;
 	while (node->next != NULL)
 	{
-		if (node->value < value && value < node->next->value)
-			break ;
-		if (value < node->next->value && node->next->value < node->value)
-			break ;
-		if (value > node->value && node->value > node->next->value)
+		if (between(node->value, value, node->next->value))
 			break ;
 		i += 1;
 		node = node->next;

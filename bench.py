@@ -13,7 +13,7 @@ async def pexec(*args, **kwargs):
 
 async def sort(stack):
 	stdout = await pexec("./push_swap", *map(str, stack))
-	print(len(stack))
+	#print(len(stack))
 	return stdout.decode().split("\n")[:-1]
 
 async def check(stack, solution):
@@ -23,7 +23,7 @@ async def check(stack, solution):
 
 async def main():
 	pexec.sem = asyncio.Semaphore(100)
-	stacks = [list(range(5)) for _ in range(200)]
+	stacks = [list(range(500)) for _ in range(200)]
 	for stack in stacks:
 		random.shuffle(stack)
 	solutions = await asyncio.gather(*map(sort, stacks))
@@ -34,20 +34,26 @@ async def main():
 	print(f"avg: {sum(counts) // len(counts)}")
 	print(f"ok: {all(results)}")
 
-async def plot(n):
-	pexec.sem = asyncio.Semaphore(100)
-	stacks = [list(range(i+1)) for i in range(n)]
+async def plot2(n, m, c, ax, j):
+	await pexec("make", "re", f"CFLAGS=-DCHUNK_SIZE={c}")
+	stacks = [list(range((i+1)*m)) for i in range(n)]
 	for stack in stacks:
 		random.shuffle(stack)
-	solutions = await asyncio.gather(*map(sort, stacks))
-	results = await asyncio.gather(*[check(s, r) for s, r in zip(stacks, solutions)])
-	counts = list(map(len, solutions))
+	counts = [0 for _ in range(n)]
+	for _ in range(j):
+		sol = await asyncio.gather(*map(sort, stacks))
+		for i in range(n):
+			counts[i] += len(sol[i]) / j
+	ax.plot([(i+1)*m for i in range(n)], counts, linewidth=2.0)
 
+async def plot(n, m, j):
+	pexec.sem = asyncio.Semaphore(100)
 	fig, ax = plt.subplots()
-	ax.plot(range(n), counts, linewidth=2.0)
+	for c in [150]:
+		await plot2(n, m, c, ax, j)
 	plt.show()
 
 if __name__ == "__main__":
 	random.seed(0)
-	#asyncio.run(main())
-	asyncio.run(plot(2000))
+	asyncio.run(main())
+	#asyncio.run(plot(500, 1, 1))
