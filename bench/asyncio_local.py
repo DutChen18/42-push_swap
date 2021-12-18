@@ -1,29 +1,12 @@
 import asyncio
 
 class local:
-	def __init__(self):
+	def __init__(self, init):
 		self.context = {}
+		self.init = init
 
-	def get_it(self):
-		loop = id(asyncio.get_running_loop())
-		return self.context[loop]
-	
-	def set_it(self, value):
-		loop = id(asyncio.get_running_loop())
-		self.context[loop] = value
-	
-	def del_it(self):
-		loop = id(asyncio.get_running_loop())
-		del self.context[loop]
-
-	def get(self, init):
+	def get(self, init=None):
 		loop = id(asyncio.get_running_loop())
 		if loop not in self.context:
-			return init()
-		return self.context[loop]
-
-	def set(self, init):
-		loop = id(asyncio.get_running_loop())
-		if loop not in self.context:
-			self.context[loop] = init()
+			self.context[loop] = (init or self.init)()
 		return self.context[loop]
