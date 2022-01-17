@@ -1,24 +1,42 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   instr.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: csteenvo <csteenvo@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/01/17 10:31:57 by csteenvo      #+#    #+#                 */
+/*   Updated: 2022/01/17 10:31:59 by csteenvo      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 #include <unistd.h>
 
-static const char	*g_ops[] = {
-	"sa",
-	"sb",
-	"ss",
-	NULL,
-	"pa",
-	"pb",
-	NULL,
-	NULL,
-	"ra",
-	"rb",
-	"rr",
-	NULL,
-	"rra",
-	"rrb",
-	"rrr",
-	NULL
-};
+static const char
+	*get_op(int i)
+{
+	const char	*ops[16] = {
+		"sa",
+		"sb",
+		"ss",
+		NULL,
+		"pa",
+		"pb",
+		NULL,
+		NULL,
+		"ra",
+		"rb",
+		"rr",
+		NULL,
+		"rra",
+		"rrb",
+		"rrr",
+		NULL
+	};
+
+	return (ops[i]);
+}
 
 int
 	i_parse(const char *buf)
@@ -29,12 +47,12 @@ int
 	i = 0;
 	while (i < 16)
 	{
-		if (g_ops[i] != NULL)
+		if (get_op(i) != NULL)
 		{
 			j = 0;
-			while (g_ops[i][j] && g_ops[i][j] == buf[j])
+			while (get_op(i)[j] && get_op(i)[j] == buf[j])
 				j += 1;
-			if (!g_ops[i][j] && buf[j] == '\n')
+			if (!get_op(i)[j] && buf[j] == '\n')
 				return (i);
 		}
 		i += 1;
@@ -75,9 +93,9 @@ void
 	size_t	size;
 
 	size = 0;
-	while (g_ops[op][size])
+	while (get_op(op)[size])
 	{
-		buf[size] = g_ops[op][size];
+		buf[size] = get_op(op)[size];
 		size += 1;
 	}
 	buf[size] = '\n';

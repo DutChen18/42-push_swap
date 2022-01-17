@@ -6,10 +6,11 @@ OBJ=$(SRC:.c=.o)
 OBJ_PUSH_SWAP=$(SRC_PUSH_SWAP:.c=.o)
 OBJ_CHECKER=$(SRC_CHECKER:.c=.o)
 CFLAGS=-Wall -Wextra -Werror -O3 -flto
+NAME=push_swap
 
-all: push_swap checker
+all: $(NAME) checker
 
-push_swap: $(OBJ) $(OBJ_PUSH_SWAP)
+$(NAME): $(OBJ) $(OBJ_PUSH_SWAP)
 	$(CC) $(CFLAGS) -o $@ $^
 
 checker: $(OBJ) $(OBJ_CHECKER)
@@ -22,6 +23,6 @@ clean:
 	rm -f $(OBJ) $(OBJ_PUSH_SWAP) $(OBJ_CHECKER)
 
 fclean: clean
-	rm -f push_swap checker
+	rm -f $(NAME) checker
 
 re: fclean all
