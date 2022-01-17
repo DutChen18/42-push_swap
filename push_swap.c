@@ -6,7 +6,7 @@
 /*   By: csteenvo <csteenvo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/17 10:32:07 by csteenvo      #+#    #+#                 */
-/*   Updated: 2022/01/17 10:32:08 by csteenvo      ########   odam.nl         */
+/*   Updated: 2022/01/17 12:47:47 by csteenvo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ int
 {
 	int		i;
 
+	if (a_sorted(&ctx[0]))
+		return (0);
 	while (ctx[0].size > CHUNK_SIZE + 3)
 	{
 		i = a_select(&ctx[0], u_min(CHUNK_SIZE - 1, ctx[0].size - 4));

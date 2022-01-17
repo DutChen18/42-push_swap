@@ -6,27 +6,32 @@
 /*   By: csteenvo <csteenvo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/17 10:32:02 by csteenvo      #+#    #+#                 */
-/*   Updated: 2022/01/17 10:32:03 by csteenvo      ########   odam.nl         */
+/*   Updated: 2022/01/17 12:42:02 by csteenvo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <limits.h>
 
 static int
-	m_atoi(char *str, int *value)
+	m_atoi(char *str, int *v)
 {
-	int	sign;
+	int	s;
 
 	if (!*str)
 		return (-1);
-	sign = 1 - (*str == '-') * 2;
+	s = 1 - (*str == '-') * 2;
 	str += *str == '-';
-	*value = 0;
+	*v = 0;
 	while (*str >= '0' && *str <= '9')
 	{
-		*value = *value * 10 + (*str - '0') * sign;
+		if (*v > INT_MAX / 10 || (s > 0 && *v * 10 > INT_MAX - (*str - '0')))
+			return (-1);
+		if (*v < INT_MIN / 10 || (s < 0 && *v * 10 < INT_MIN + (*str - '0')))
+			return (-1);
+		*v = *v * 10 + (*str - '0') * s;
 		str += 1;
 	}
 	if (*str)
@@ -61,7 +66,7 @@ static int
 	t_list	ctx[2];
 
 	if (list->size < 1)
-		return (-1);
+		return (0);
 	ctx[0] = *list;
 	ctx[1].frst = NULL;
 	ctx[1].last = NULL;

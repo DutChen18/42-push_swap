@@ -6,7 +6,7 @@
 /*   By: csteenvo <csteenvo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/17 10:32:31 by csteenvo      #+#    #+#                 */
-/*   Updated: 2022/01/17 10:32:32 by csteenvo      ########   odam.nl         */
+/*   Updated: 2022/01/17 12:43:16 by csteenvo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int		i_read(int *op);
 void	i_write(int op);
 void	i_exec(t_list *ctx, int op);
 
+int		a_sorted(t_list *list);
 int		a_position(t_list *list, int value);
 int		a_select(t_list *list, int n);
 int		a_min_index(t_list *list);

@@ -6,7 +6,7 @@
 /*   By: csteenvo <csteenvo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/17 10:31:48 by csteenvo      #+#    #+#                 */
-/*   Updated: 2022/01/17 10:31:52 by csteenvo      ########   odam.nl         */
+/*   Updated: 2022/01/17 12:43:04 by csteenvo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,21 @@ static int
 	if (b < c && a > c)
 		return (1);
 	return (0);
+}
+
+int
+	a_sorted(t_list *list)
+{
+	t_node	*node;
+
+	node = list->frst;
+	while (node != NULL && node->next != NULL)
+	{
+		if (node->value > node->next->value)
+			return (0);
+		node = node->next;
+	}
+	return (1);
 }
 
 int
