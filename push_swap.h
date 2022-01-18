@@ -6,7 +6,7 @@
 /*   By: csteenvo <csteenvo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/01/17 10:32:31 by csteenvo      #+#    #+#                 */
-/*   Updated: 2022/01/17 12:43:16 by csteenvo      ########   odam.nl         */
+/*   Updated: 2022/01/18 14:21:48 by csteenvo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,22 @@
 typedef struct s_node	t_node;
 typedef struct s_list	t_list;
 
-struct s_node {
+struct s_node
+{
 	t_node	*next;
 	t_node	*prev;
 	int		value;
 };
 
-struct s_list {
+struct s_list
+{
 	t_node	*frst;
 	t_node	*last;
 	size_t	size;
 };
 
-enum {
+enum
+{
 	op_sa = 0x0,
 	op_sb = 0x1,
 	op_ss = 0x2,
